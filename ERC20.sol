@@ -24,6 +24,7 @@ contract ERC20 is IERC20 {
     constructor(string memory name_, string memory symbol_) {
         _name = name_;
         _symbol = symbol_;
+        _mint(msg.sender, 1000000000000000000);
     }
 
     /**
@@ -84,7 +85,14 @@ contract ERC20 is IERC20 {
     
          /* <------ Your code goes here ------->
          */
-       
+        require(to != address(0), "ERC20: transfer to the zero address");
+        require(_balances[msg.sender] >= amount, "ERC20: transfer amount exceeds balance");
+
+        _balances[msg.sender] -= amount;
+        _balances[to] += amount;
+        emit Transfer(msg.sender, to, amount);
+        return true;
+               
     }
 
     /**
@@ -107,6 +115,10 @@ contract ERC20 is IERC20 {
     function approve(address spender, uint256 amount) public virtual override returns (bool) {
          /* <------ Your code goes here ------->
          */
+         require(spender != address(0), "ERC20: approve to the zero address");
+        _allowances[msg.sender][spender] = amount;
+        emit Approval(msg.sender, spender, amount);
+        return true;
     }
 
     /**
@@ -128,6 +140,15 @@ contract ERC20 is IERC20 {
     function transferFrom(address from, address to, uint256 amount) public virtual override returns (bool) {
           /* <------ Your code goes here ------->
          */
+        require(from != address(0) && to != address(0), "ERC20: transfer from and to the zero address are not allowed");
+        require(_balances[from] >= amount && _allowances[from][msg.sender] >= amount, "ERC20: transfer amount exceeds balance or allowance");
+
+        _allowances[from][msg.sender] -= amount;
+        _balances[from] -= amount;
+        _balances[to] += amount;
+
+        emit Transfer(from, to, amount);
+    return true;
     }
 
     /**
@@ -191,6 +212,15 @@ contract ERC20 is IERC20 {
        
          /* <------ Your code goes here ------->
          */
+        require(from != address(0), "from address cannot be the zero address.");
+        require(_balances[from] >= amount, "insufficient balance in from address.");
+        require(_balances[to] + amount >= _balances[to], "overflow in to address balance.");
+     
+        // update balances
+        _balances[from] -= amount;
+        _balances[to] += amount;
+     
+        emit Transfer(from, to, amount);
     }
 
     /** @dev Creates `amount` tokens and assigns them to `account`, increasing
