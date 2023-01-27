@@ -4,11 +4,6 @@
 
 ### Objective: To understand the ERC-20 smart contract structure. 
 
-### Tasks: Write the code to complete the empty functions in the smart contract. 
+### Task has been Completed. I have completed the transfer, approve and transferFrom functions
 
-### Steps:
-##### 1. Clone the repository 
-
-##### 2. Write an appropriate code where mentioned.
-
-##### 3. Send me the link to your github repo 
+### I also tested the Smart Contract and it works fine as well.
